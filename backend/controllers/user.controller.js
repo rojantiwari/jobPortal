@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 
 export const register = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, password, role } = req.body;
-  console.log(fullname, email, phoneNumber, password, role);
 
   if (!fullname || !email || !phoneNumber || !password || !role) {
     return res.status(400).json({
@@ -16,9 +15,12 @@ export const register = asyncHandler(async (req, res) => {
       success: false,
     });
   }
-  // const file = req.file;
-  // const fileUri = getDataUri(file);
-  // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
+  /* 
+  const file = req.file;
+  const fileUri = getDataUri(file); 
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+ */
 
   const user = await User.findOne({ email });
   if (user) {
@@ -57,10 +59,9 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   // Find user by email using Prisma
-  let user = await User.findOne({
-    email,
-    // include: { profile: true }, // Include the profile relation if needed
-  });
+  let user = await User.findOne({ email }).select("+password");
+  // include: { profile: true }, // Include the profile relation if needed
+  // });
 
   if (!user) {
     return res.status(400).json({
@@ -72,7 +73,7 @@ export const login = asyncHandler(async (req, res) => {
   // Check password match
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
-    return res.clearCookie().status(400).json({
+    return res.clearCookie("token").status(400).json({
       message: "Incorrect  password.",
       success: false,
     });
@@ -92,8 +93,14 @@ export const login = asyncHandler(async (req, res) => {
   const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
-  console.log(token);
 
+  // Send token as HTTP-only cookie (for security)
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  });
   // Prepare user object for response
   user = {
     id: user.id,
@@ -106,18 +113,13 @@ export const login = asyncHandler(async (req, res) => {
   };
 
   // Send response with token in cookie
-  return res
-    .status(200)
-    .cookie("token", token, {
-      maxAge: 1 * 24 * 60 * 60 * 1000,
-      httpsOnly: true,
-      sameSite: "strict",
-    })
-    .json({
-      message: `Welcome back ${user.fullname}`,
-      user,
-      success: true,
-    });
+  // return res
+  return res.status(200).json({
+    message: `Login successful ${user.fullname}`,
+    success: true,
+    token, // Include token in the response
+    user,
+  });
 });
 
 export const logout = asyncHandler(async (req, res) => {
@@ -137,7 +139,6 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const updateProfile = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, bio, skills } = req.body;
-  console.log(fullname, email, phoneNumber, bio, skills);
 
   const file = req.file;
 

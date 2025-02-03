@@ -20,18 +20,24 @@ function CategoryCarousel() {
   return (
     <>
       <div className="w-full max-w-xl mx-auto my-20">
-        <Carousel className=" w-full max-w-xl mx-auto my-auto">
+        <Carousel
+          className="w-full max-w-xl mx-auto my-auto"
+          opts={{
+            align: "start", // Align the active item to the start
+            loop: true, // Enable infinite loop
+          }}
+        >
           <CarouselContent>
-            {category.map((cat, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg-basis-1/3">
-                <Button variant="outline" className="rounded-full">
-                  {cat}
+            {category.map((category, index) => (
+              <CarouselItem key={index} className="basis-full">
+                <Button variant="outline" className="rounded-lg min-w-full">
+                  {category}
                 </Button>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="cursor-pointer hover:bg-[#6A38C2]" />
+          <CarouselNext className="cursor-pointer hover:bg-[#6A38C2]" />
         </Carousel>
       </div>
     </>

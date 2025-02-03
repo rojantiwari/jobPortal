@@ -27,8 +27,6 @@ function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const [loading, setLoading] = useState(false);
-
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -59,6 +57,8 @@ function Signup() {
         },
         withCredentials: true,
       });
+      console.log(res);
+
       if (res.data.success) {
         console.log(res);
         navigate("/login");

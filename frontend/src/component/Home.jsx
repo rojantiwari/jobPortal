@@ -3,7 +3,7 @@ import Navbar from "./shared/navbar";
 import HeroSection from "./HeroSection";
 import CategoryCarousel from "./CategoryCarousel";
 import Latestjobs from "./Latestjobs";
-import Footer from "./Footer";
+import Footer from "./shared/Footer";
 
 function Home() {
   return (
