@@ -18,14 +18,14 @@ function HeroSection() {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
           aspernatur temporibus nihil tempora dolor!
         </p>
-        <div className="flex w-[40%] shadow-lg border border-gray-200 pl-3 rounded-full  gap-4 mx-auto">
+        <div className="flex w-[40%] shadow-lg border border-gray-200 pl-3 rounded-lg  gap-4 mx-auto mt-4">
           <input
             type="text"
             placeholder="Find your dream jobs"
-            className="outline-none border-none w-full"
+            className="outline-none border-none w-full h-11 font-semibold"
           />
-          <Button className="rounded-r-full bg-[#6A38C2]">
-            <Search className="h-5 w-5" />
+          <Button className="rounded-r-lg bg-[#6A38C2] h-11">
+            <Search className="h-7 w-7" />
           </Button>
         </div>
       </div>

@@ -30,7 +30,7 @@ function Login() {
   };
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Prevent page refresh
     try {
       dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
@@ -39,6 +39,7 @@ function Login() {
         },
         withCredentials: true,
       });
+
       if (res.data.success) {
         console.log(res.data.message);
         dispatch(setAuthUser(res.data.user));
@@ -61,7 +62,7 @@ function Login() {
             className=" w-1/2  border border-gray-200 rounded-lg p-4 my-10"
             onSubmit={submitHandler}
           >
-            <h1 className="font-bold text-xl mb-5">Sign Up</h1>
+            <h1 className="font-bold text-xl mb-5">Login</h1>
 
             <div className="my-2">
               <Label>Email</Label>

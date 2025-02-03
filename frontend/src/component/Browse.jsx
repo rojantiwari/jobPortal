@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./shared/navbar";
-import Footer from "./Footer";
+import Footer from "./shared/Footer";
 import Job from "./Job";
 
 const randomJobs = [1, 2, 3, 4, 5, 6, 7, 8];

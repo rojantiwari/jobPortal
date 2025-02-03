@@ -9,9 +9,8 @@ import { useState } from "react";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 
 const skills = ["Html", "CSS", "JavaScript", "Reactjs"];
-
+const isResume = false;
 const Profile = () => {
-  const isResume = true;
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,7 +57,6 @@ const Profile = () => {
                 key={index}
                 className="cursor-pointer mx-2 bg-gray-400 rounded-xl"
               >
-                {" "}
                 {item}
               </Badge>
             ))

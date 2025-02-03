@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./shared/navbar";
-import Footer from "./Footer";
+import Footer from "./shared/Footer";
 import FilterCard from "./FilterCard";
 import Job from "./Job";
 import { SpaceEvenlyHorizontallyIcon } from "@radix-ui/react-icons";
