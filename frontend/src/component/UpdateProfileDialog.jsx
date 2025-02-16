@@ -62,7 +62,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
           credentials: "include",
         }
       );
-      if (res.data.success) {
+      if (res.data.token) {
+        console.log(res.data.token);
         dispatch(setUser(res.data.user));
         toast.success(res.data.message);
       }
