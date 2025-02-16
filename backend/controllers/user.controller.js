@@ -5,6 +5,8 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { generateTokenandSetCookie } from "../utils/generateTokenandSetCookie.js";
 import jwt from "jsonwebtoken";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, password, role } = req.body;
@@ -139,29 +141,29 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const updateProfile = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, bio, skills } = req.body;
+  console.log(fullname, email, phoneNumber, bio, skills);
 
   const file = req.file;
 
-  // if (!fullname || !email || !phoneNumber || !bio || !skills) {
-  //   return res.status(400).json({
-  // message: "Something is missing",
-  //     success: false,
-  //   });
-  // }
-
   //cloudinary comes here....
+  const fileUri = getDataUri(file);
+
+  const cloudResponse = await cloudinary.uploader.update_metadata(
+    fileUri.content
+  );
 
   let skillsArray;
   if (skills) {
     skillsArray = skills.split(",");
   }
   const userId = req.id; // middleware authentication
+  console.log(userId);
 
   let user = await User.findById(userId);
 
   if (!user) {
     return res.status(400).json({
-      message: "User not found.",
+      message: "User not found in update route.",
       success: false,
     });
   }
@@ -177,6 +179,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
   // Format the response user object
 
   //resume  comes later here...
+  if (cloudResponse) {
+    user.profile.resume = cloudResponse.secure_url; //save the cloudinary url
+    user.profile.resumeOriginalName = file.originalname;
+  }
 
   await user.save();
 

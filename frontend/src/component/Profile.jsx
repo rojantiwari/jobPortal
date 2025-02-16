@@ -7,11 +7,14 @@ import { Label } from "@/components/ui/label";
 import AppliedJobTable from "./AppliedJobTable";
 import { useState } from "react";
 import UpdateProfileDialog from "./UpdateProfileDialog";
+import { useSelector } from "react-redux";
 
 const skills = ["Html", "CSS", "JavaScript", "Reactjs"];
 const isResume = false;
 const Profile = () => {
   const [open, setOpen] = useState(false);
+
+  const { user } = useSelector((store) => store.auth);
 
   return (
     <div>
@@ -23,7 +26,7 @@ const Profile = () => {
               <AvatarImage src="https://github.com/shadcn.png" alt="Profile" />
             </Avatar>
             <div>
-              <h1 className="font-medium text-xl ">Full Name</h1>
+              <h1 className="font-medium text-xl ">{user?.fullname}</h1>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
                 sunt ad nulla accusamus at ut laborum porro nemo, nam eos?
@@ -42,11 +45,11 @@ const Profile = () => {
         <div className="my-5">
           <div className="flex items-center gap-4 my-3">
             <Mail />
-            <span className="">rojan@gmail.com</span>
+            <span className="">{user?.email}</span>
           </div>
           <div className="flex items-center gap-4 my-3 ">
             <Contact />
-            <span className="">9864061893</span>
+            <span className="">{user?.phoneNumber}</span>
           </div>
         </div>
         <div className="my-5">
@@ -61,7 +64,7 @@ const Profile = () => {
               </Badge>
             ))
           ) : (
-            <Badge className="cursor-pointer"> Please Put your skill</Badge>
+            <Badge className="cursor-pointer"> {user?.skill}</Badge>
           )}
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">

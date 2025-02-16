@@ -26,6 +26,7 @@ function Login() {
   // const [loading, setLoading] = useState(false);
 
   const changeEventHandler = (e) => {
+    console.log(input);
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
@@ -41,8 +42,11 @@ function Login() {
       });
 
       if (res.data.success) {
-        console.log(res.data.message);
+        console.log(res.data);
         dispatch(setAuthUser(res.data.user));
+        const token = response.data.token;
+        // Store the token in local storage
+        localStorage.setItem("authToken", token);
         navigate("/");
         toast.success(res.data.message);
       }
