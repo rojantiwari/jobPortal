@@ -1,5 +1,4 @@
 import DataUriParser from "datauri/parser.js";
-
 import path from "path";
 
 const getDataUri = (file) => {
@@ -7,8 +6,10 @@ const getDataUri = (file) => {
     throw new Error("No file provided");
   }
   const parser = new DataUriParser();
-  const extName = path.extname(file.originalname).toString();
-  return parser.format(extName, file.buffer);
+  const extension = path.extname(file.originalname).toString();
+  const dataUri = parser.format(extension, file.buffer);
+
+  return dataUri; // Ensure it returns { content: "data:image/png;base64,..." }
 };
 
 export default getDataUri;

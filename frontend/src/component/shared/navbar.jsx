@@ -6,15 +6,38 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { LogIn, LogOut, User2 } from "lucide-react";
+import { LogOut, User2 } from "lucide-react";
 
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setAuthUser } from "@/redux/slices/authSlice";
+import { USER_API_END_POINT } from "@/utils/constant";
+import axios from "axios";
 
 function Navbar() {
-  // const user = false;
   const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      const res = await axios.get(`${USER_API_END_POINT}/logout`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        console.log("Hello");
+        dispatch(setAuthUser(null));
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.res.data.message);
+    }
+  };
+
   return (
     <div className="bg-white mt-4">
       <div className=" flex items-center justify-between mx-auto max-w-7xl h-16">
@@ -42,8 +65,8 @@ function Navbar() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={user?.profile?.profilePhoto} />
+                    <AvatarFallback>{user?.fullname}</AvatarFallback>
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
@@ -51,14 +74,14 @@ function Navbar() {
                     <div className="flex gap-2 space-y-2">
                       <Avatar className="cursor-pointer mt-2">
                         <AvatarImage
-                          src="https://github.com/shadcn.png"
-                          alt="@shadcn"
+                          src={user?.profile?.profilePhoto}
+                          alt={user?.fullname}
                         />
                       </Avatar>
                       <div>
-                        <h4 className="font-medium">Rojan Tiwari</h4>
+                        <h4 className="font-medium">{user.fullname}</h4>
                         <p className="text-sm text-muted-foreground">
-                          User Bio
+                          {user?.profile?.bio}
                         </p>
                       </div>
                     </div>
@@ -72,7 +95,12 @@ function Navbar() {
 
                       <div className="flex w-fit items-center gap-2 cursor-pointer">
                         <LogOut />
-                        <Button>Logout</Button>
+                        <Button
+                          onClick={logoutHandler}
+                          className="hover:bg-slate-600 hover:text-white"
+                        >
+                          Logout
+                        </Button>
                       </div>
                     </div>
                   </div>

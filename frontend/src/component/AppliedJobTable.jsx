@@ -15,7 +15,9 @@ import React from "react";
 function AppliedJobTable() {
   return (
     <Table>
-      <TableCaption>A list of your applied jobs.</TableCaption>
+      <TableCaption className="font-semibold text-2xl">
+        A list of your applied jobs.
+      </TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Date</TableHead>

@@ -13,10 +13,12 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
 
   const [input, setInput] = useState({
@@ -41,6 +43,14 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    // Retrieve the token
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please log in to update your profile.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
@@ -52,40 +62,33 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     }
     try {
       setLoading(true);
-      const res = await axios.put(
+      const res = await axios.post(
         `${USER_API_END_POINT}/profile/update`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
+          withCredentials: true,
         }
       );
-      if (res.data.token) {
-        console.log(res.data.token);
+
+      if (res.data.success) {
         dispatch(setUser(res.data.user));
+        navigate("/profile");
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
     setOpen(false);
-    console.log(input);
   };
 
   const outsideEventHandler = () => {
     setOpen(false);
-    setInput({
-      fullname: "",
-      email: "",
-      phoneNumber: "",
-      bio: "",
-      skills: "",
-    });
   };
 
   return (

@@ -15,7 +15,7 @@ router.route("/login").post(login);
 
 router
   .route("/profile/update")
-  .put(isAuthenticated, singleUpload, updateProfile);
+  .post(isAuthenticated, singleUpload, updateProfile);
 
 router.route("/logout").get(logout);
 

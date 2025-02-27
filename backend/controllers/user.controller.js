@@ -18,11 +18,9 @@ export const register = asyncHandler(async (req, res) => {
     });
   }
 
-  /* 
   const file = req.file;
-  const fileUri = getDataUri(file); 
+  const fileUri = getDataUri(file);
   const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
- */
 
   const user = await User.findOne({ email });
   if (user) {
@@ -39,9 +37,9 @@ export const register = asyncHandler(async (req, res) => {
     phoneNumber,
     password: hashedPassword,
     role,
-    // profile: {
-    //   // profilePhoto: cloudResponse.secure_url,
-    // },
+    profile: {
+      profilePhoto: cloudResponse.secure_url,
+    },
   });
 
   return res.status(201).json({
@@ -145,17 +143,36 @@ export const updateProfile = asyncHandler(async (req, res) => {
 
   const file = req.file;
 
+  if (!file) {
+    return res.status(400).json({
+      message: "No file uploaded.",
+      success: false,
+    });
+  }
+
   //cloudinary comes here....
   const fileUri = getDataUri(file);
 
-  const cloudResponse = await cloudinary.uploader.update_metadata(
-    fileUri.content
-  );
+  let cloudResponse;
+  {
+    try {
+      cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      return res.status(500).json({
+        message: "Failed to upload file to Cloudinary.",
+        success: false,
+      });
+    }
+  }
 
   let skillsArray;
-  if (skills) {
-    skillsArray = skills.split(",");
+  if (skills && skills.trim() !== "") {
+    skillsArray = skills.split(",").map((skill) => skill.trim());
+  } else {
+    skillsArray = [];
   }
+
   const userId = req.id; // middleware authentication
   console.log(userId);
 
@@ -168,7 +185,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
     });
   }
 
-  //updating user
+  // Initialize profile object if it doesn't exist
+  if (!user.profile) {
+    user.profile = {};
+  }
 
   // updating data
   if (fullname) user.fullname = fullname;
