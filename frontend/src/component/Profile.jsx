@@ -9,8 +9,8 @@ import { useState } from "react";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from "react-redux";
 
-const skills = ["Html", "CSS", "JavaScript", "Reactjs"];
-const isResume = false;
+// const skills = ["Html", "CSS", "JavaScript", "Reactjs"];
+const isResume = true;
 const Profile = () => {
   const [open, setOpen] = useState(false);
 
@@ -23,14 +23,11 @@ const Profile = () => {
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src="https://github.com/shadcn.png" alt="Profile" />
+              <AvatarImage src={user?.profile?.profilePhoto} alt="Profile" />
             </Avatar>
             <div>
               <h1 className="font-medium text-xl ">{user?.fullname}</h1>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                sunt ad nulla accusamus at ut laborum porro nemo, nam eos?
-              </p>
+              <p>{user?.profile?.bio}</p>
             </div>
           </div>
           {/* edit */}
@@ -54,29 +51,26 @@ const Profile = () => {
         </div>
         <div className="my-5">
           <h1>Skills</h1>
-          {skills.length !== 0 ? (
-            skills.map((item, index) => (
-              <Badge
-                key={index}
-                className="cursor-pointer mx-2 bg-gray-400 rounded-xl"
-              >
-                {item}
-              </Badge>
-            ))
-          ) : (
-            <Badge className="cursor-pointer"> {user?.skill}</Badge>
-          )}
+          <div className="flex items-center gap-1">
+            {user?.profile?.skills.length !== 0 ? (
+              user?.profile?.skills.map((item, index) => (
+                <Badge key={index}>{item}</Badge>
+              ))
+            ) : (
+              <span>NA</span>
+            )}
+          </div>
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="text-md font-bold "> Resume</Label>
           {isResume ? (
             <a
               target="blank"
-              href="https:youtube.com"
+              href={user?.profile?.resume}
               className=" text-red-400 hover:underline cursor-pointer"
             >
               {" "}
-              Mern stack
+              {user?.profile?.resumeOriginalName}
             </a>
           ) : (
             <span>Not applicable</span>

@@ -19,14 +19,13 @@ function Login() {
     role: "",
   });
 
-  const { loading } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // const [loading, setLoading] = useState(false);
 
   const changeEventHandler = (e) => {
-    console.log(input);
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
@@ -42,17 +41,15 @@ function Login() {
       });
 
       if (res.data.success) {
-        console.log(res.data);
         dispatch(setAuthUser(res.data.user));
-        const token = response.data.token;
-        // Store the token in local storage
-        localStorage.setItem("authToken", token);
+        // After successful login
+        console.log(res.data.token);
+        localStorage.setItem("token", res.data.token);
         navigate("/");
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error.response.data.message);
-      toast.error(error.response.data.message);
+      toast.error(error.res.data.message);
     } finally {
       dispatch(setLoading(false));
     }
