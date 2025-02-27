@@ -43,7 +43,7 @@ function Login() {
       if (res.data.success) {
         dispatch(setAuthUser(res.data.user));
         // After successful login
-        console.log(res.data.token);
+
         localStorage.setItem("token", res.data.token);
         navigate("/");
         toast.success(res.data.message);

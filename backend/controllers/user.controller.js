@@ -50,7 +50,7 @@ export const register = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password, role } = req.body;
-  console.log(email, password, role);
+
   if (!email || !password || !role) {
     return res.status(400).json({
       message: "Something is missing",
@@ -139,7 +139,6 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const updateProfile = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, bio, skills } = req.body;
-  console.log(fullname, email, phoneNumber, bio, skills);
 
   const file = req.file;
 
@@ -174,7 +173,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
   }
 
   const userId = req.id; // middleware authentication
-  console.log(userId);
 
   let user = await User.findById(userId);
 

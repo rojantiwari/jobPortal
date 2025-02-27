@@ -12,6 +12,5 @@ export const generateTokenandSetCookie = async (res, userId) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time (7 days)
   });
 
-  console.log("Token set:", token);
   return token;
 };
