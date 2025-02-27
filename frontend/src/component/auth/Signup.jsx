@@ -57,10 +57,8 @@ function Signup() {
         },
         withCredentials: true,
       });
-      console.log(res);
 
       if (res.data.success) {
-        console.log(res);
         navigate("/login");
         toast.success(res.data.message);
       }

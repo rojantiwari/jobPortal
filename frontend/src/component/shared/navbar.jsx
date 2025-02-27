@@ -27,7 +27,6 @@ function Navbar() {
         withCredentials: true,
       });
       if (res.data.success) {
-        console.log("Hello");
         dispatch(setAuthUser(null));
         navigate("/");
         toast.success(res.data.message);

@@ -24,7 +24,6 @@ const useGetAllJobs = () => {
         });
 
         if (res.data.success) {
-          console.log("Hello Success");
           dispatch(setAllJobs(res.data.jobs));
         }
       } catch (error) {

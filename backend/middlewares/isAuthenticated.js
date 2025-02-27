@@ -5,8 +5,6 @@ export const isAuthenticated = (req, res, next) => {
     // Extract token from Authorization header (Bearer Token)
     const authHeader = req.headers.authorization;
 
-    console.log(authHeader);
-
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         message: "Unauthorized: No token provided",
@@ -22,7 +20,6 @@ export const isAuthenticated = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log("Authentication error:", error); // More detailed logging
     return res.status(401).json({
       message: "Invalid or expired token",
       success: false,
